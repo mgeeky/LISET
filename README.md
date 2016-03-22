@@ -42,3 +42,6 @@ x 18. Every drive NTFS info
 24. XueTr/PCHunter logs gathering
 25. Sigcheck recursive files scanning
 ```
+
+
+PS: Some day it is going to be written from a scratch in PowerShell. For now, in order to be backwards-compatible with WinXP - batch will remain.
