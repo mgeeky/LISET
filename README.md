@@ -5,6 +5,8 @@ Light System Examination Toolkit (LISET) - logs &amp; activity &amp; configurati
 
 This is a script intended to be run during incident analysis or after malware infection. It gathers logs from several commands and tools, that will be used to produce a package with most valuable informations about system's enviroment after an incident. Such package containing logs could be later on send to computer forensics or malware analysis expert for examination.
 
+This script uses several utilies from SysInternalsSuite, Matthieu Suiche DumpIt, XueTr/PCHunter command line version and 7zip command line packer.
+
 
 ### List of phases
 
