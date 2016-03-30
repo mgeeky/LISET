@@ -626,9 +626,9 @@ echo           a) %SS_PATH1%...
 %TOOLSDIR%\sigcheck.exe -a -e -h -q -u -vt -v "%SS_PATH1%" > %LOGDIR%\sigcheck_1.txt
 %TOOLSDIR%\sigcheck.exe -a -e -h -q -u -vt -v "%SS_PATH1%\System32" > %LOGDIR%\sigcheck_1.txt
 echo           b) %SS_PATH2%...
-%TOOLSDIR%\sigcheck.exe -h -q -r -s -u -vt -v "%SS_PATH2%" > %LOGDIR%\sigcheck_2.txt
+%TOOLSDIR%\sigcheck.exe -h -q -r -s -u "%SS_PATH2%" > %LOGDIR%\sigcheck_2.txt
 echo           c) %SS_PATH3%...
-%TOOLSDIR%\sigcheck.exe -e -h -q -r -s -u -vt -v "%SS_PATH3%" > %LOGDIR%\sigcheck_3.txt
+%TOOLSDIR%\sigcheck.exe -e -h -q -r -s -u "%SS_PATH3%" > %LOGDIR%\sigcheck_3.txt
 
 echo   Completed.
 
