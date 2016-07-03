@@ -347,7 +347,7 @@ netstat -e > %LOGDIR%\LOG_NETSTAT.txt
 echo ------------------------ >> %LOGDIR%\LOG_NETSTAT.txt
 netstat -r >> %LOGDIR%\LOG_NETSTAT.txt
 echo ------------------------ >> %LOGDIR%\LOG_NETSTAT.txt
-netstat -abfoq >> %LOGDIR%\LOG_NETSTAT.txt
+netstat -abfo >> %LOGDIR%\LOG_NETSTAT.txt
 
 echo   Completed.
 
