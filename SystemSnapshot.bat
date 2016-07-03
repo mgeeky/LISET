@@ -646,12 +646,12 @@ echo.
 echo LAST PHASE: Compressing the logs directory
 echo     notice: this step may take a little while
 %TOOLSDIR%\7z.exe a %LOGDIR% %LOGDIR% 2> nul > nul
-move %LOGDIR%.7z %cd%LISET_LOGS.7z > nul
+move %LOGDIR%.7z %cd%\LISET_LOGS.7z > nul
 del /S /F /Q %LOGDIR% 2> nul > nul
 rmdir %LOGDIR% 2> nul > nul
 
 echo.
 echo   Script has finished it's execution.
-echo   Logs stored at: %cd%LISET_LOGS.7z 
+echo   Logs stored at: %cd%\LISET_LOGS.7z 
 echo.
 
