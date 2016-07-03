@@ -62,7 +62,7 @@ SET cwd=%~dp0
 SET TOOLSDIR=%cwd%tools
 
 REM SystemSnapshot paths counter
-set LOGDIR=%cd%Logs_%COMPUTERNAME%_%RANDOM%
+set LOGDIR=%cd%\Logs_%COMPUTERNAME%_%RANDOM%
 set PERFORM_ALL=0
 
 :: Setting processor architecture
@@ -97,6 +97,7 @@ echo Machine's uptime: >> %LOGDIR%\_INFO.txt
 echo. >> %LOGDIR%\_INFO.txt
 set >> %LOGDIR%\_INFO.txt
 
+echo Logs are to be stored at: %LOGDIR%
 
 echo.
 echo ===============================================
