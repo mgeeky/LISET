@@ -5,7 +5,7 @@ SET VERSION=0.5
 
 echo.
 echo                 SystemSnapshot v%VERSION%
-echo IT Forensics and System incident response tool. 
+echo IT Forensics and System incident data collection tool. 
 echo Mariusz B. / MGeeky, 2011-2016
 echo.
 
@@ -123,8 +123,7 @@ REM **** PHASE 0a - Full memory dump
 REM
 echo.
 echo PHASE 0a: Full memory dump (DumpIt RAW format)
-echo.
-echo    Skipping, perform this step manually by using "%TOOLSDIR%\DumpIt.exe" utility.
+echo   Skipping, perform this step manually by using "%TOOLSDIR%\DumpIt.exe" utility.
 :: echo ===================================
 :: echo    WARNING: When asked - Press 'y' to dump full memory contents (huge output!), or 'n' otherwise.
 :: echo    Afterwards, hit [ENTER]
@@ -461,11 +460,25 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 :PHASE16
 REM **** PHASE 16 - Autoruns
 REM
+
 echo.
 echo PHASE 16: Collecting and briefly analysing AUTORUN values...
 echo           notice: This step may take a while, please be patient.
-%TOOLSDIR%\autorunsc.exe /accepteula -a dehiklt -h -m -s -u > %LOGDIR%\LIST_Autoruns0.txt 2> nul
+
+if "%LONG_STEPS%" == "n" goto PHASE16B
+if "%LONG_STEPS%" == "N" goto PHASE16B
+
+%TOOLSDIR%\autorunsc.exe /accepteula -a dehiklst -h -m -s -u > %LOGDIR%\LIST_Autoruns0.txt 2> nul
 %TOOLSDIR%\autorunsc.exe /accepteula -a * -h -m -s -u > %LOGDIR%\LIST_Autoruns1.txt 2> nul
+
+goto PHASE16COMPLETED
+
+:PHASE16B
+echo   (Warning: Collecting autorun entries without signature validation due to
+echo   user choice to omit long steps)
+%TOOLSDIR%\autorunsc.exe /accepteula -a dehiklst -h -m > %LOGDIR%\LIST_Autoruns0b.txt 2> nul
+
+:PHASE16COMPLETED
 echo   Completed.
 
 REM if "%PERFORM_ALL%" neq "1" goto MENU
