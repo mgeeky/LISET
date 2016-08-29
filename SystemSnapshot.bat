@@ -600,8 +600,8 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 :PHASE25
 
-if "%LONG_STEPS%" == "n" goto PHASE25
-if "%LONG_STEPS%" == "N" goto PHASE25
+if "%LONG_STEPS%" == "n" goto PHASE26
+if "%LONG_STEPS%" == "N" goto PHASE26
 
 echo.
 echo PHASE 25: Alternate Data Streams scan...
@@ -624,8 +624,8 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 :PHASE26
 
-if "%LONG_STEPS%" == "n" goto PHASE26
-if "%LONG_STEPS%" == "N" goto PHASE26
+if "%LONG_STEPS%" == "n" goto PHASE27
+if "%LONG_STEPS%" == "N" goto PHASE27
 
 REM **** PHASE 26 - Registry dump
 echo.
@@ -653,8 +653,8 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 :PHASE27
 
-if "%LONG_STEPS%" == "n" goto PHASE27
-if "%LONG_STEPS%" == "N" goto PHASE27
+if "%LONG_STEPS%" == "n" goto PHASE28
+if "%LONG_STEPS%" == "N" goto PHASE28
 
 echo.
 echo PHASE 27: Signature recursive files scanning and verifying...
