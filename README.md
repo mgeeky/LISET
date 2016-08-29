@@ -11,36 +11,49 @@ This script uses several utilies from SysInternalsSuite, Matthieu Suiche DumpIt,
 ### List of phases
 
 ```
-0a. Full memory dump
+This script collects information about system from different
+locations. It gathers:
+ x - not implemented yet
+ s - skipped
+ c - conditional (long steps)
+ d - disabled code
+
+d 0a. Full memory dump
 0b. Preliminary system informations gathering
-1.  Dump of registry Keys (Exports)
-2.  Tree view of SS_PATHs
-3.  DIR view of SS_PATHs
-4.  Whole list of running (and not) services
-5.  Whole list of running (and not) drivers
-6.  List of running/loaded/unloaded DLLs
-7.  Current PROCESS List (from 3 different collectors):
+1. Collecting some forensics traces
+2. Tree view of SS_PATHs
+3. DIR view of SS_PATHs
+4. Whole list of running (and not) services
+5. Whole list of running (and not) drivers
+6. WMI database queries.
+7. List of running/loaded/unloaded DLLs
+8. Current PROCESS List (from 3 different collectors):
 	 * system tasklist
+	 * WMI database
 	 * Sysinternals PSLIST
  	 * and any extra source
-8.  MD5 sums of each file in SS_PATHs
-9.  Dump of actual machine memory (win32dd)
-10. Dump of actual kernel memory (Crash Dump)
-11. Complete log from netstat
-12. DNS Cache list (ipconfig /flushdns )
-13. ARP Routing Table
-14. List of every spotted Alternate Data Stream in SS_PATHs
-15. Simple autorun values list (simple view format)
-16. Copy of Master Boot Record
-17. Whole system registered Handles list
-x 18. Every drive NTFS info
-19. Open ports list (through TCPVcon.exe)
-20. Current logged in users list
-21. Simple copy of hosts file
-22. Possible FIREWALL filters (netsh)
-23. Complete SYSTEMINFO log
-24. XueTr/PCHunter logs gathering
-25. Sigcheck recursive files scanning
+s 9. MD5 sums of each file in SS_PATHs
+s 10. Dump of actual machine memory (win32dd)
+s 11. Dump of actual kernel memory (Crash Dump)
+12. Complete log from netstat
+13. DNS Cache list (ipconfig /flushdns )
+14. ARP Routing Table
+15. XueTr/PCHunter logs gathering
+16. Simple autorun values list (simple view format)
+s 17. Copy of Master Boot Record
+18. Whole system registered Handles list
+x 19. Every drive NTFS info
+20. Open ports list (through TCPVcon.exe)
+21. Current logged in users list
+22. Simple copy of hosts file
+23. Possible FIREWALL filters (netsh)
+24. Complete SYSTEMINFO log
+c 25. List of every spotted Alternate Data Stream in SS_PATHs
+c 26.  Dump of registry Keys (Exports)
+c 27. Sigcheck recursive files scanning
+
+Then script will move all gathered log files into one folder
+and pack this folder (zip or something) and compare MD5 checksums
 ```
 
 
