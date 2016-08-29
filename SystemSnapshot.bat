@@ -239,12 +239,12 @@ wmic /OUTPUT:"%LOGDIR%\Services-WMI-full.txt" service list full
 wmic /OUTPUT:"%LOGDIR%\LIST_Autoruns-WMI.txt" startup list full
 
 if "%LONG_STEPS%" == "n" goto PHASE6COMPLETED
-echo - qurying installed products list...
+if "%LONG_STEPS%" == "N" goto PHASE6COMPLETED
 wmic /OUTPUT:"%LOGDIR%\LIST_Installed_Software.csv" product list full /FORMAT:CSV
 
 
 :PHASE6COMPLETED
-echo Completed.
+echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
