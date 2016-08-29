@@ -538,7 +538,8 @@ REM
 echo.
 echo PHASE 20: Open ports list
 
-%TOOLSDIR%\cports%ARCH%.exe /stext %LOGDIR%\PORTS_List.txt
+REM %TOOLSDIR%\cports%ARCH%.exe /stext %LOGDIR%\PORTS_List.txt
+%TOOLSDIR%\cports.exe /stext %LOGDIR%\PORTS_List.txt
 
 echo   Completed.
 
