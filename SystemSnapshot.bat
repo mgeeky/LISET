@@ -23,30 +23,32 @@ REM 2. Tree view of SS_PATHs
 REM 3. DIR view of SS_PATHs
 REM 4. Whole list of running (and not) services
 REM 5. Whole list of running (and not) drivers
-REM 6. List of running/loaded/unloaded DLLs
-REM 7. Current PROCESS List (from 3 different collectors):
+REM 6. WMI database queries.
+REM 7. List of running/loaded/unloaded DLLs
+REM 8. Current PROCESS List (from 3 different collectors):
 REM 	 * system tasklist
+REM		 * WMI database
 REM 	 * Sysinternals PSLIST
 REM  	 * and any extra source
-REM s 8. MD5 sums of each file in SS_PATHs
-REM s 9. Dump of actual machine memory (win32dd)
-REM s 10. Dump of actual kernel memory (Crash Dump)
-REM 11. Complete log from netstat
-REM 12. DNS Cache list (ipconfig /flushdns )
-REM 13. ARP Routing Table
-REM 14. XueTr/PCHunter logs gathering
-REM 15. Simple autorun values list (simple view format)
-REM s 16. Copy of Master Boot Record
-REM 17. Whole system registered Handles list
-REM x 18. Every drive NTFS info
-REM 19. Open ports list (through TCPVcon.exe)
-REM 20. Current logged in users list
-REM 21. Simple copy of hosts file
-REM 22. Possible FIREWALL filters (netsh)
-REM 23. Complete SYSTEMINFO log
-REM c 24. List of every spotted Alternate Data Stream in SS_PATHs
-REM c 25.  Dump of registry Keys (Exports)
-REM c 26. Sigcheck recursive files scanning
+REM s 9. MD5 sums of each file in SS_PATHs
+REM s 10. Dump of actual machine memory (win32dd)
+REM s 11. Dump of actual kernel memory (Crash Dump)
+REM 12. Complete log from netstat
+REM 13. DNS Cache list (ipconfig /flushdns )
+REM 14. ARP Routing Table
+REM 15. XueTr/PCHunter logs gathering
+REM 16. Simple autorun values list (simple view format)
+REM s 17. Copy of Master Boot Record
+REM 18. Whole system registered Handles list
+REM x 19. Every drive NTFS info
+REM 20. Open ports list (through TCPVcon.exe)
+REM 21. Current logged in users list
+REM 22. Simple copy of hosts file
+REM 23. Possible FIREWALL filters (netsh)
+REM 24. Complete SYSTEMINFO log
+REM c 25. List of every spotted Alternate Data Stream in SS_PATHs
+REM c 26.  Dump of registry Keys (Exports)
+REM c 27. Sigcheck recursive files scanning
 REM
 REM Then script will move all gathered log files into one folder
 REM and pack this folder (zip or something) and compare MD5 checksums
@@ -115,7 +117,6 @@ echo ===============================================
 
 echo Directory to store log files: %LOGDIR%...
 echo.
-
 
 :PHASE0a
 REM **** PHASE 0a - Full memory dump
@@ -226,10 +227,32 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
 :PHASE6
-REM **** PHASE 6 - List of loaded DLLs
+REM **** PHASE 6 - WMI database queries
 REM
 echo.
-echo PHASE 6: Enumerating list of loaded DLLs...
+echo PHASE 6: WMI database queries...
+
+wmic /OUTPUT:"%LOGDIR%\LIST_Processes_WMI1.csv" process list full /format:CSV
+wmic /OUTPUT:"%LOGDIR%\LIST_Processes_WMI2-full.txt" process list full
+wmic /OUTPUT:"%LOGDIR%\LIST_Processes_WMI3-paths.txt" process get processid,caption,executablepath,commandline /format:LIST
+wmic /OUTPUT:"%LOGDIR%\Services-WMI-full.txt" service list full
+wmic /OUTPUT:"%LOGDIR%\LIST_Autoruns-WMI.txt" startup list full
+
+if "%LONG_STEPS%" == "n" goto PHASE6COMPLETED
+echo - qurying installed products list...
+wmic /OUTPUT:"%LOGDIR%\LIST_Installed_Software.csv" product list full /FORMAT:CSV
+
+
+:PHASE6COMPLETED
+echo Completed.
+REM if "%PERFORM_ALL%" neq "1" goto MENU
+
+
+:PHASE7
+REM **** PHASE 7 - List of loaded DLLs
+REM
+echo.
+echo PHASE 7: Enumerating list of loaded DLLs...
 %TOOLSDIR%\listdlls.exe > %LOGDIR%\LIST_DLLs.txt
 
 echo   Completed.
@@ -237,11 +260,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE7
-REM **** PHASE 7 - Current process list...
+:PHASE8
+REM **** PHASE 8 - Current process list...
 REM
 echo.
-echo PHASE 7: Enumerating currently running processes list...
+echo PHASE 8: Enumerating currently running processes list...
 
 echo           a) TASKLIST
 tasklist /FO TABLE > %LOGDIR%\LIST_Processes_TaskList1.txt
@@ -259,11 +282,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE8
-REM **** PHASE 8 - MD5 sums of each file in SS_PATHs
+:PHASE9
+REM **** PHASE 9 - MD5 sums of each file in SS_PATHs
 REM
 echo.
-echo PHASE 8: Collecting MD5 sums of every important file...
+echo PHASE 9: Collecting MD5 sums of every important file...
 echo   Skipping, as this step is not that important.
 :: echo            Please wait, this is going to take a moment.
 :: 
@@ -281,15 +304,15 @@ echo   Skipping, as this step is not that important.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 echo.
-echo PHASE 9 and 10 (Memory Manager and kernel memory pool dumping) 
+echo PHASE 10 and 11 (Memory Manager and kernel memory pool dumping) 
 echo         are getting skipped due to different purpose of this script.
 
-goto :PHASE11
+goto :PHASE12
 
-:: :PHASE9
-:: REM **** PHASE 9 - Dump of Actual machine memory
+:: :PHASE10
+:: REM **** PHASE 10 - Dump of Actual machine memory
 :: echo.
-:: echo PHASE 9: Dump entire Physical Memory pool
+:: echo PHASE 10: Dump entire Physical Memory pool
 :: echo     Note: Press ENTER after about 180 seconds !
 :: echo     notice: this step will take a little while
 :: 
@@ -312,11 +335,11 @@ goto :PHASE11
 :: REM if "%PERFORM_ALL%" neq "1" goto MENU
 :: 
 :: 
-:: :PHASE10
-:: REM **** PHASE 10 - Kernel (BSOD) Memory Dump
+:: :PHASE11
+:: REM **** PHASE 11 - Kernel (BSOD) Memory Dump
 :: REM
 :: echo.
-:: echo PHASE 10: Dump of actual Kernel Memory (BSOD)
+:: echo PHASE 11: Dump of actual Kernel Memory (BSOD)
 :: echo     Note: Press ENTER after about 180 seconds !
 :: echo     notice: this step will take a little while
 :: 
@@ -339,10 +362,10 @@ goto :PHASE11
 :: REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE11
-REM **** PHASE 11 - Complete log from netstat
+:PHASE12
+REM **** PHASE 12 - Complete log from netstat
 echo.
-echo PHASE 11: Gathering complete list of open connections from netstat
+echo PHASE 12: Gathering complete list of open connections from netstat
 netstat -e > %LOGDIR%\LOG_NETSTAT.txt
 echo ------------------------ >> %LOGDIR%\LOG_NETSTAT.txt
 netstat -r >> %LOGDIR%\LOG_NETSTAT.txt
@@ -354,11 +377,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE12
-REM **** PHASE 12 - DNS Cache list
+:PHASE13
+REM **** PHASE 13 - DNS Cache list
 REM
 echo.
-echo PHASE 12: DNS Cache list dump
+echo PHASE 13: DNS Cache list dump
 ipconfig /displaydns > %LOGDIR%\LIST_DNSCache.txt
 
 echo   Completed.
@@ -366,11 +389,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE13
-REM **** PHASE 13 - ARP Routing table
+:PHASE14
+REM **** PHASE 14 - ARP Routing table
 REM
 echo.
-echo PHASE 13: ARP Routing table dump
+echo PHASE 14: ARP Routing table dump
 arp -a > %LOGDIR%\LIST_ARP_RoutingTable.txt
 
 echo   Completed.
@@ -378,15 +401,15 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE14
+:PHASE15
 
 echo.
 
 %xuetr% | findstr /B /C:"Load Driver Error" > nul
 IF %errorlevel% NEQ 0 (
-    echo PHASE 14 is being skipped due to XueTr driver's loading failure.
+    echo PHASE 15 is being skipped due to XueTr driver's loading failure.
 ) ELSE (
-    echo PHASE 14: XueTr/PCHunter logs gathering
+    echo PHASE 15: XueTr/PCHunter logs gathering
     %xuetr% lkm > %LOGDIR%\xuetr_lkm.txt
     %xuetr% ssdt > %LOGDIR%\xuetr_ssdt.txt
     %xuetr% shadowssdt > %LOGDIR%\xuetr_shadowssdt.txt
@@ -435,11 +458,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE15
-REM **** PHASE 15 - Autoruns
+:PHASE16
+REM **** PHASE 16 - Autoruns
 REM
 echo.
-echo PHASE 15: Collecting and briefly analysing AUTORUN values...
+echo PHASE 16: Collecting and briefly analysing AUTORUN values...
 echo           notice: This step may take a while, please be patient.
 %TOOLSDIR%\autorunsc.exe -a dehiklt -h -m -s -u > %LOGDIR%\LIST_Autoruns0.txt 2> nul
 %TOOLSDIR%\autorunsc.exe -a * -h -m -s -u > %LOGDIR%\LIST_Autoruns1.txt 2> nul
@@ -448,11 +471,11 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE16
-REM **** PHASE 16 - Copy of MBR
+:PHASE17
+REM **** PHASE 17 - Copy of MBR
 REM
 echo.
-echo PHASE 16: Copying Master+Volume Boot Record (MBR/VBR) binary...
+echo PHASE 17: Copying Master+Volume Boot Record (MBR/VBR) binary...
 echo   Skipping due to problems with cross-platform TSK FLS/icat workings.
 :: echo           Examining file's system meta-structure...
 :: %TOOLSDIR%\fls.exe \\.\%SYSTEMDRIVE% > %LOGDIR%\fls_SystemDrive.txt
@@ -472,11 +495,11 @@ echo   Skipping due to problems with cross-platform TSK FLS/icat workings.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE17
-REM **** PHASE 17 - Whole system registered handles list
+:PHASE18
+REM **** PHASE 18 - Whole system registered handles list
 REM
 echo.
-echo PHASE 17: Whole system registered handles list dumping...
+echo PHASE 18: Whole system registered handles list dumping...
 %TOOLSDIR%\handle -s > %LOGDIR%\LIST_Handles.txt
 echo . >> %LOGDIR%\LIST_Handles.txt
 %TOOLSDIR%\handle -a >> %LOGDIR%\LIST_Handles.txt
@@ -486,21 +509,21 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE18
-REM **** PHASE 18 - Every drive NTFS info
+:PHASE19
+REM **** PHASE 19 - Every drive NTFS info
 REM
 echo.
-echo PHASE 18: Every drive's NTFS info
+echo PHASE 19: Every drive's NTFS info
 echo    [-] Currently Not Available.
 
-REM echo PHASE 18: Collecting every drive NTFS info
+REM echo PHASE 19: Collecting every drive NTFS info
 
-:PHASE19
+:PHASE20
 
-REM **** PHASE 19: Open ports list
+REM **** PHASE 20: Open ports list
 REM
 echo.
-echo PHASE 19: Open ports list
+echo PHASE 20: Open ports list
 
 %TOOLSDIR%\cports%ARCH%.exe /stext %LOGDIR%\PORTS_List.txt
 
@@ -508,26 +531,13 @@ echo   Completed.
 
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
-:PHASE20
-
-REM **** PHASE 20: Current logged on users list
-REM
-echo.
-echo PHASE 20: Currently Logged on users list
-%TOOLSDIR%\PsLoggedon.exe > %LOGDIR%\LoggedOn_List.txt 2> nul
-
-echo   Completed.
-
-REM if "%PERFORM_ALL%" neq "1" goto MENU
-
-
 :PHASE21
 
-REM **** PHASE 21: Simple copy of hosts file
+REM **** PHASE 21: Current logged on users list
 REM
 echo.
-echo PHASE 21: HOSTS file.
-copy %SYSTEMROOT%\System32\drivers\etc\hosts %LOGDIR%\hosts.txt > nul
+echo PHASE 21: Currently Logged on users list
+%TOOLSDIR%\PsLoggedon.exe > %LOGDIR%\LoggedOn_List.txt 2> nul
 
 echo   Completed.
 
@@ -536,10 +546,23 @@ REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 :PHASE22
 
-REM **** PHASE 22: Possible FIREWALL filters (netsh)
+REM **** PHASE 22: Simple copy of hosts file
+REM
+echo.
+echo PHASE 22: HOSTS file.
+copy %SYSTEMROOT%\System32\drivers\etc\hosts %LOGDIR%\hosts.txt > nul
+
+echo   Completed.
+
+REM if "%PERFORM_ALL%" neq "1" goto MENU
+
+
+:PHASE23
+
+REM **** PHASE 23: Possible FIREWALL filters (netsh)
 REM 
 echo.
-echo PHASE 22: Possible FIREWALL filters (netsh^)
+echo PHASE 23: Possible FIREWALL filters (netsh^)
 
 netsh firewall show config > %LOGDIR%\netsh_firewall0.txt
 netsh advfirewall firewall show rule name=all > %LOGDIR%\netsh_firewall_all.txt
@@ -549,25 +572,25 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE23
+:PHASE24
 
-REM **** PHASE 23: Complete SYSTEMINFO log
+REM **** PHASE 24: Complete SYSTEMINFO log
 REM
 echo.
-echo PHASE 23: Complete SYSTEMINFO log
+echo PHASE 24: Complete SYSTEMINFO log
 systeminfo /FO list > %LOGDIR%\SystemInfo.txt
 
 echo   Completed.
 
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
-:PHASE24
+:PHASE25
 
 if "%LONG_STEPS%" == "n" goto PHASE25
 if "%LONG_STEPS%" == "N" goto PHASE25
 
 echo.
-echo PHASE 24: Alternate Data Streams scan...
+echo PHASE 25: Alternate Data Streams scan...
 echo     notice: this step will take a while. Please, be patient.
 echo.
 echo           a) %SS_PATH1%...
@@ -585,14 +608,14 @@ echo.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE25
+:PHASE26
 
 if "%LONG_STEPS%" == "n" goto PHASE26
 if "%LONG_STEPS%" == "N" goto PHASE26
 
-REM **** PHASE 25 - Registry dump
+REM **** PHASE 26 - Registry dump
 echo.
-echo PHASE 25: Dumping registry Hives...
+echo PHASE 26: Dumping registry Hives...
 echo          a) HKCU export...
 reg export HKCU %LOGDIR%\HKCU_export.reg > nul 2> nul
 
@@ -614,13 +637,13 @@ echo   Completed.
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
 
-:PHASE26
+:PHASE27
 
 if "%LONG_STEPS%" == "n" goto PHASE27
 if "%LONG_STEPS%" == "N" goto PHASE27
 
 echo.
-echo PHASE 26: Signature recursive files scanning and verifying...
+echo PHASE 27: Signature recursive files scanning and verifying...
 echo     notice: this step will take a much LONGER while. Please, be patient!
 echo.
 echo           a) %SS_PATH1%...
@@ -635,7 +658,7 @@ echo   Completed.
 
 REM if "%PERFORM_ALL%" neq "1" goto MENU
 
-:PHASE27
+:PHASE28
 
 :FINISH
 
@@ -655,3 +678,4 @@ echo   Script has finished it's execution.
 echo   Logs stored at: %cd%\LISET_LOGS.7z 
 echo.
 
+:END
