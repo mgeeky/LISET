@@ -1,7 +1,7 @@
 @echo off
 SetLocal EnableExtensions EnableDelayedExpansion
 
-SET VERSION=0.4
+SET VERSION=0.5
 
 echo.
 echo                 SystemSnapshot v%VERSION%
