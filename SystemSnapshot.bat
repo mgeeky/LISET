@@ -140,7 +140,7 @@ REM **** PHASE 0b - Preliminary system's info gathering
 REM
 echo.
 echo PHASE 0b: Preliminary system info gathering.
-%TOOLSDIR%\PsInfo.exe -h -s -d > %LOGDIR%\SystemInfo0.txt 2> nul
+%TOOLSDIR%\PsInfo.exe /accepteula -h -s -d > %LOGDIR%\SystemInfo0.txt 2> nul
 
 echo   Completed.
 
@@ -207,7 +207,7 @@ REM
 echo.
 echo PHASE 4: Gathering list of services...
 sc queryex type= service > %LOGDIR%\LIST_Services1.txt
-%TOOLSDIR%\PsService.exe > %LOGDIR%\LIST_Services2.txt 2> nul
+%TOOLSDIR%\PsService.exe /accepteula > %LOGDIR%\LIST_Services2.txt 2> nul
 
 echo   Completed.
 
@@ -253,7 +253,7 @@ REM **** PHASE 7 - List of loaded DLLs
 REM
 echo.
 echo PHASE 7: Enumerating list of loaded DLLs...
-%TOOLSDIR%\listdlls.exe > %LOGDIR%\LIST_DLLs.txt
+%TOOLSDIR%\listdlls.exe /accepteula > %LOGDIR%\LIST_DLLs.txt
 
 echo   Completed.
 
@@ -271,8 +271,8 @@ tasklist /FO TABLE > %LOGDIR%\LIST_Processes_TaskList1.txt
 tasklist /FO TABLE /SVC > %LOGDIR%\LIST_Processes_Tasklist2.txt
 
 echo           b) SysInternals PSLIST
-%TOOLSDIR%\pslist.exe -x > %LOGDIR%\LIST_Processes_PsList_ComplexDetails.txt 2> nul
-%TOOLSDIR%\pslist.exe -t > %LOGDIR%\LIST_Processes_PsList_TreeView.txt 2> nul
+%TOOLSDIR%\pslist.exe /accepteula -x > %LOGDIR%\LIST_Processes_PsList_ComplexDetails.txt 2> nul
+%TOOLSDIR%\pslist.exe /accepteula -t > %LOGDIR%\LIST_Processes_PsList_TreeView.txt 2> nul
 
 echo           c) XueTr/PCHunter ps
 %xuetr% ps > %LOGDIR%\LIST_Processes_XueTr.txt
@@ -464,8 +464,8 @@ REM
 echo.
 echo PHASE 16: Collecting and briefly analysing AUTORUN values...
 echo           notice: This step may take a while, please be patient.
-%TOOLSDIR%\autorunsc.exe -a dehiklt -h -m -s -u > %LOGDIR%\LIST_Autoruns0.txt 2> nul
-%TOOLSDIR%\autorunsc.exe -a * -h -m -s -u > %LOGDIR%\LIST_Autoruns1.txt 2> nul
+%TOOLSDIR%\autorunsc.exe /accepteula -a dehiklt -h -m -s -u > %LOGDIR%\LIST_Autoruns0.txt 2> nul
+%TOOLSDIR%\autorunsc.exe /accepteula -a * -h -m -s -u > %LOGDIR%\LIST_Autoruns1.txt 2> nul
 echo   Completed.
 
 REM if "%PERFORM_ALL%" neq "1" goto MENU
@@ -500,9 +500,9 @@ REM **** PHASE 18 - Whole system registered handles list
 REM
 echo.
 echo PHASE 18: Whole system registered handles list dumping...
-%TOOLSDIR%\handle -s > %LOGDIR%\LIST_Handles.txt
+%TOOLSDIR%\handle /accepteula -s > %LOGDIR%\LIST_Handles.txt
 echo . >> %LOGDIR%\LIST_Handles.txt
-%TOOLSDIR%\handle -a >> %LOGDIR%\LIST_Handles.txt
+%TOOLSDIR%\handle /accepteula -a >> %LOGDIR%\LIST_Handles.txt
 
 echo   Completed.
 
@@ -537,7 +537,7 @@ REM **** PHASE 21: Current logged on users list
 REM
 echo.
 echo PHASE 21: Currently Logged on users list
-%TOOLSDIR%\PsLoggedon.exe > %LOGDIR%\LoggedOn_List.txt 2> nul
+%TOOLSDIR%\PsLoggedon.exe /accepteula > %LOGDIR%\LoggedOn_List.txt 2> nul
 
 echo   Completed.
 
@@ -594,13 +594,13 @@ echo PHASE 25: Alternate Data Streams scan...
 echo     notice: this step will take a while. Please, be patient.
 echo.
 echo           a) %SS_PATH1%...
-%TOOLSDIR%\streams.exe -s "%SS_PATH1%" > %LOGDIR%\LIST_ADS_1.txt
+%TOOLSDIR%\streams.exe /accepteula -s "%SS_PATH1%" > %LOGDIR%\LIST_ADS_1.txt
 
 echo           b) %SS_PATH2%...
-%TOOLSDIR%\streams.exe -s "%SS_PATH2%" > %LOGDIR%\LIST_ADS_2.txt
+%TOOLSDIR%\streams.exe /accepteula -s "%SS_PATH2%" > %LOGDIR%\LIST_ADS_2.txt
 
 echo           c) %SS_PATH3%...
-%TOOLSDIR%\streams.exe -s "%SS_PATH3%" > %LOGDIR%\LIST_ADS_3.txt
+%TOOLSDIR%\streams.exe /accepteula -s "%SS_PATH3%" > %LOGDIR%\LIST_ADS_3.txt
 
 echo   Completed.
 echo.
@@ -647,12 +647,12 @@ echo PHASE 27: Signature recursive files scanning and verifying...
 echo     notice: this step will take a much LONGER while. Please, be patient!
 echo.
 echo           a) %SS_PATH1%...
-%TOOLSDIR%\sigcheck.exe -a -e -h -q -u -vt -v "%SS_PATH1%" > %LOGDIR%\sigcheck_1.txt
-%TOOLSDIR%\sigcheck.exe -a -e -h -q -u -vt -v "%SS_PATH1%\System32" > %LOGDIR%\sigcheck_1.txt
+%TOOLSDIR%\sigcheck.exe /accepteula -a -e -h -q -u -vt -v "%SS_PATH1%" > %LOGDIR%\sigcheck_1.txt
+%TOOLSDIR%\sigcheck.exe /accepteula -a -e -h -q -u -vt -v "%SS_PATH1%\System32" > %LOGDIR%\sigcheck_1.txt
 echo           b) %SS_PATH2%...
-%TOOLSDIR%\sigcheck.exe -h -q -r -s -u "%SS_PATH2%" > %LOGDIR%\sigcheck_2.txt
+%TOOLSDIR%\sigcheck.exe /accepteula -h -q -r -s -u "%SS_PATH2%" > %LOGDIR%\sigcheck_2.txt
 echo           c) %SS_PATH3%...
-%TOOLSDIR%\sigcheck.exe -e -h -q -r -s -u "%SS_PATH3%" > %LOGDIR%\sigcheck_3.txt
+%TOOLSDIR%\sigcheck.exe /accepteula -e -h -q -r -s -u "%SS_PATH3%" > %LOGDIR%\sigcheck_3.txt
 
 echo   Completed.
 
